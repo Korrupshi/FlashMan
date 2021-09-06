@@ -1,7 +1,9 @@
 
 # Folders to skip
 node_modules
-data
+data/
 test
+py/venv/
 venv
+test.*
 __pycache__
