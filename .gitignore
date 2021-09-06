@@ -1,0 +1,6 @@
+
+# Folders to skip
+node_modules
+data
+test
+__pycache__

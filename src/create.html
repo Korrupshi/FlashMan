@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<link rel="stylesheet" href="create.css" />
+		<title>Write a file</title>
+	</head>
+	<body>
+		<div class="main">
+			<h4 id="test_win2">
+				Write a word or sentence for your deck, each on a new line.
+			</h4>
+			<textarea
+				name="write_deck"
+				id="txt_create"
+				cols="50"
+				rows="20"
+			></textarea>
+			<div>
+				<input
+					type="text"
+					name="fname"
+					id="new_fname"
+					placeholder="Enter file name"
+				/>
+				<button id="btn_txt_send">Create file</button>
+			</div>
+			<!-- <script src="./render.js"></script> -->
+			<script>
+				const { ipcRenderer } = require('electron');
+
+				document.getElementById('btn_txt_send').addEventListener(
+					'click',
+					() => {
+						// Some data that will be sent to the main process
+						let Data = document.getElementById('txt_create').value;
+						let in_Data = document.getElementById('txt_create');
+						let fname = document.getElementById('new_fname').value;
+						let in_fname = document.getElementById('new_fname');
+						// Trigger the event listener action to this event in the renderer process and send the data
+						if (Data != '') {
+							if (fname != '') {
+								ipcRenderer.send('sending-data', Data, fname);
+								console.log('data sent to Main process');
+							} else {
+								console.log('Give a title');
+								in_fname.value = 'Give a title';
+								in_fname.style.color = 'red';
+								setTimeout(() => {
+									in_fname.value = '';
+									in_fname.style.color = 'black';
+								}, 1000);
+							}
+						} else {
+							console.log('Fill in words for deck.');
+							in_Data.value = 'Fill in words for deck.';
+							in_Data.style.color = 'red';
+							setTimeout(() => {
+								in_Data.value = '';
+								in_Data.style.color = 'black';
+							}, 1000);
+						}
+						// ipcRenderer.send('sending-data', Data, fname);
+						// console.log('data sent to Main process');
+					},
+					false
+				);
+			</script>
+		</div>
+	</body>
+</html>

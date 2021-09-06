@@ -1,0 +1,30 @@
+/* Create file */
+/* 1. General */
+:root {
+	--mainColor: #415a77;
+	--secColor: #1b263b;
+	--terColor: #e0e1dd;
+	--btnColor: #0d1b2a;
+
+	--borderColor: #c1c1c1;
+
+	--mainText: #f9f4f5;
+	--secText: #e0e1dd;
+	--terText: black;
+}
+.main {
+	display: flex;
+	flex-direction: column;
+	width: 95%;
+	justify-content: center;
+	align-items: center;
+}
+#btn_txt_send {
+	/* background-color: var(--mainColor); */
+	/* border: 1px solid var(--secColor); */
+	margin: 10px 0px;
+	/* color: var(--mainText); */
+}
+#txt_create {
+	align-items: center;
+}
