@@ -27,6 +27,9 @@
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	hyphens: auto;
 }
 
 body,
@@ -70,7 +73,7 @@ textarea {
 .head {
 	background-color: var(--mainColor);
 	color: var(--mainText);
-	overflow: auto;
+	/* overflow: hidden; */
 }
 /* Navbar____________________ */
 .topnav {
@@ -246,7 +249,7 @@ textarea {
 	display: flex;
 	background-color: var(--mainText);
 	color: var(--terText);
-	overflow: auto;
+	/* overflow: auto; */
 	height: 100%;
 	text-align: center;
 	align-items: flex-end;
@@ -258,7 +261,7 @@ textarea {
 	display: flex;
 	background-color: var(--mainText);
 	color: black;
-	overflow: auto;
+	/* overflow: auto; */
 	height: 100%;
 	text-align: center;
 	align-items: flex-start;
@@ -267,9 +270,12 @@ textarea {
 .front {
 	grid-area: Front;
 	display: flex;
+	padding: 10px;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
 	background-color: var(--mainText);
 	color: var(--terText);
-	overflow: auto;
+	/* overflow: hidden; */
 	height: 100%;
 	text-align: center;
 	align-items: center;
