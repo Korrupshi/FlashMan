@@ -1,4 +1,5 @@
 /* TODO: 
+	1. When clicking hard / audio / flip, something goes wrong at reset
 
 	Feature:
 		- Choose to only get pinyin, or produce audio: 
@@ -232,8 +233,9 @@ function load_data() {
 		temp = df2;
 	}
 
-	temp = shuffle(temp);
+	// temp = shuffle(temp); // Randomize full deck
 	english = temp.slice(0, deck_size);
+	english = shuffle(english); // Ordered deck
 	lab_feed.innerHTML = `Deck: '${filename}'`;
 	setTimeout(() => {
 		lab_feed.innerHTML = '';
@@ -732,8 +734,8 @@ function del_deck() {
 const deck_res = document.getElementById('deck_res');
 
 deck_res.addEventListener('click', () => {
-	df1 = '';
-	df3 = '';
+	df1 = [];
+	df3 = [];
 	reset();
 	update_deck();
 	load_data();
