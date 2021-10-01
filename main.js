@@ -1,4 +1,5 @@
 const { app, dialog, BrowserWindow, ipcMain } = require('electron');
+const electronLocalshortcut = require('electron-localshortcut');
 // const electron = require('electron');
 const path = require('path');
 const url = require('url');
@@ -162,6 +163,28 @@ function createWindow() {
 	win.loadURL(`${__dirname}/src/index.html`);
 	// win.webContents.openDevTools();
 	win.setPosition(760, 0);
+
+	// Global key shortcuts
+	// a. Audio play
+	electronLocalshortcut.register('W', () => {
+		win.webContents.send('short-audio');
+	});
+	// b. Flash card
+	electronLocalshortcut.register('C', () => {
+		win.webContents.send('short-flash');
+	});
+	// c. Easy
+	electronLocalshortcut.register('Q', () => {
+		win.webContents.send('short-easy');
+	});
+	// d. Reset
+	electronLocalshortcut.register('R', () => {
+		win.webContents.send('short-reset');
+	});
+	// e. Close app
+	electronLocalshortcut.register('CmdOrCtrl+W', () => {
+		app.quit();
+	});
 
 	win.on('closed', () => {
 		// win = null;

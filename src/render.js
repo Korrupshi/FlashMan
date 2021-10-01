@@ -181,6 +181,7 @@ deck_item3.innerHTML = saved_deck[2];
 // 2. Response
 const front = document.getElementById('lab_front');
 const back = document.getElementById('lab_back');
+const back_div = document.getElementById('back_div');
 const pinyin = document.getElementById('lab_pin');
 const num_flash = document.getElementById('num_flash');
 const icon_flip = document.getElementById('icon_flip');
@@ -210,7 +211,7 @@ function load_data() {
 		);
 	} catch (err) {
 		console.log('L1 failed to load ' + err);
-		// df1 = [];
+		df1 = [];
 	}
 
 	try {
@@ -219,7 +220,7 @@ function load_data() {
 		);
 	} catch (err) {
 		console.log('L3 failed to load ' + err);
-		// df3 = [];
+		df3 = [];
 	}
 	english = []; //empty list to fill
 	temp = [];
@@ -253,7 +254,7 @@ function show_flash() {
 		cycle++;
 		// var english = shuffle(english); // Randomize deck
 		if (cycle % 2 == 0) {
-			//show front card
+			//show FRONT card
 			// front.innerHTML = english[count];
 			if (audio_on === 'on') {
 				// Audio mode on
@@ -266,6 +267,15 @@ function show_flash() {
 				// Audio mode off
 				front.innerHTML = `${english[count]}`;
 				pinyin.innerHTML = `${data[english[count]][0]}`;
+
+				// Add word image
+				// try {
+				// 	back_div.style.backgroundImage = `url(${
+				// 		data[english[count]][2]
+				// 	})`;
+				// } catch {
+				// 	console.log('No img');
+				// }
 
 				audio.play();
 			}
@@ -286,7 +296,8 @@ function show_flash() {
 					// audio mode off
 					num_flash.innerHTML = `(${count + 1}/${english.length})`;
 					front.innerHTML = '';
-					pinyin.innerHTML = '';
+					// pinyin.innerHTML = '';  // NO Pinyin
+					pinyin.innerHTML = data[english[count]][0]; // Show pinyin
 					back.innerHTML = data[english[count]][1];
 				}
 
@@ -309,6 +320,11 @@ function show_flash() {
 					}
 				}
 				if (audio_on === 'on') {
+					audio.play();
+				}
+
+				// Remove below to remove audio on MAIN start
+				else {
 					audio.play();
 				}
 			}
@@ -739,4 +755,22 @@ deck_res.addEventListener('click', () => {
 	reset();
 	update_deck();
 	load_data();
+});
+
+// 16. Global shortcuts
+// a. Play audio
+ipc.on('short-audio', () => {
+	play_audio();
+});
+// b. Flip flash card
+ipc.on('short-flash', () => {
+	show_flash();
+});
+// c. Easy
+ipc.on('short-easy', () => {
+	to_easy();
+});
+// d. Reset
+ipc.on('short-reset', () => {
+	reset();
 });
