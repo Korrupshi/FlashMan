@@ -27,8 +27,11 @@ function py_translate(py_df) {
 		args: [py_df],
 	};
 	// 1. Translate function
-	let trans = new PythonShell('trans_audio.py', options);
-
+	let trans = new PythonShell('1b. translate.py', options);
+	// test.end(function (err, code, message) {
+	// 	console.log('Py script Error:' + err);
+	// 	console.log('Py script finished:' + code + message);
+	// });
 	console.log('Starting translation...' + py_df);
 	trans.on('message', function (message) {
 		console.log(message);
@@ -38,6 +41,7 @@ function py_translate(py_df) {
 			console.log(message);
 		});
 	});
+	// 2. Generate audio
 }
 const menu_create = document.getElementById('menu_create');
 menu_create.addEventListener('click', (event) => {
@@ -139,7 +143,6 @@ var df3; // level 3
 var temp = []; //holder for english items
 var text_input = [];
 let fname = '';
-let speed = 1;
 
 // Switch variables
 var deck_size = 10;
@@ -231,7 +234,7 @@ function load_data() {
 		temp = df2;
 	}
 
-	// temp = shuffle(temp); // TIP: Randomize full deck
+	// temp = shuffle(temp); // Randomize full deck
 	english = temp.slice(0, deck_size);
 	english = shuffle(english); // Ordered deck
 	lab_feed.innerHTML = `Deck: '${filename}'`;
@@ -244,32 +247,26 @@ load_data();
 // D. Functions__________________
 // 1. Show flashcard
 function show_flash() {
-	try {
-		audio.pause();
-		audio.currentTime = 0;
-	} catch {
-		console.log('no audio yet');
-	}
 	// ipc.send('btn_show', 'Show card');
 	if (english.length == 0) {
 		front.innerHTML = 'No cards in deck';
 	} else {
 		cycle++;
+		// var english = shuffle(english); // Randomize deck
 		if (cycle % 2 == 0) {
 			//show FRONT card
 			// front.innerHTML = english[count];
 			if (audio_on === 'on') {
 				// Audio mode on
-				front.innerHTML = `${data[english[count]][0]}`;
-				pinyin.innerHTML = `${data[english[count]][1]}`;
-				back.innerHTML = data[english[count]][2];
+				front.innerHTML = `${english[count]}`;
+				pinyin.innerHTML = `${data[english[count]][0]}`;
+				back.innerHTML = data[english[count]][1];
 
 				audio.play();
 			} else {
 				// Audio mode off
-				front.innerHTML = `${data[english[count]][0]}`;
-				pinyin.innerHTML = `${data[english[count]][1]}`;
-				// back.innerHTML = data[english[count]][2]; // TIP: Pinyin
+				front.innerHTML = `${english[count]}`;
+				pinyin.innerHTML = `${data[english[count]][0]}`;
 
 				// Add word image
 				// try {
@@ -279,8 +276,8 @@ function show_flash() {
 				// } catch {
 				// 	console.log('No img');
 				// }
-				audio.playbackRate = speed;
-				audio.play(); //TIP: audio off now
+
+				audio.play();
 			}
 		} else {
 			// Show back card: this is starting point
@@ -299,23 +296,20 @@ function show_flash() {
 					// audio mode off
 					num_flash.innerHTML = `(${count + 1}/${english.length})`;
 					front.innerHTML = '';
-					back.innerHTML = ''; // TIP: Pinyin
-					pinyin.innerHTML = ''; // TIP: NO Pinyin
-					// pinyin.innerHTML = data[english[count]][1]; // Show pinyin
-					back.innerHTML = data[english[count]][2];
+					// pinyin.innerHTML = '';  // NO Pinyin
+					pinyin.innerHTML = data[english[count]][0]; // Show pinyin
+					back.innerHTML = data[english[count]][1];
 				}
 
 				if (
 					// First check if the file is .mp3, if not then .wav
 					file_check(filename) == true
 				) {
-					console.log('mp3 file is found');
-					console.log(filename);
+					// console.log('mp3 file is found');
 					audio.src = `../data/audio/${filename}-${
 						audio_index[english[count]]
 					}.mp3`;
 				} else {
-					console.log(filename);
 					try {
 						// console.log('No .mp3 found, using .wav');
 						audio.src = `../data/audio/${filename}-${
@@ -326,11 +320,10 @@ function show_flash() {
 					}
 				}
 				if (audio_on === 'on') {
-					audio.playbackRate = speed;
 					audio.play();
 				}
 
-				// TIP: Remove below to remove audio on MAIN start
+				// Remove below to remove audio on MAIN start
 				else {
 					audio.play();
 				}
@@ -372,10 +365,6 @@ btn_reset.addEventListener('click', function () {
 // 3. Play audio
 function play_audio() {
 	try {
-		audio.pause();
-		audio.currentTime = 0;
-		audio.playbackRate = speed;
-
 		audio.play();
 	} catch (err) {
 		console.log(`Error reading file from disk: ${err}`);
@@ -419,7 +408,7 @@ function flip_show() {
 		} else {
 			count++;
 			num_flash.innerHTML = `(${count + 1}/${english.length})`;
-			front.innerHTML = data[english[count]][0];
+			front.innerHTML = english[count];
 			back.innerHTML = '';
 			pinyin.innerHTML = '';
 			if (
@@ -442,13 +431,12 @@ function flip_show() {
 			}
 		}
 	} else {
-		back.innerHTML = data[english[count]][2];
-		pinyin.innerHTML = `${data[english[count]][1]}`;
-		front.innerHTML = `${data[english[count]][0]}`;
+		back.innerHTML = data[english[count]][1];
+		pinyin.innerHTML = `${data[english[count]][0]}`;
+		front.innerHTML = `${english[count]}`;
 		// audio = new Audio(
 		// 	`../data/audio/${filename}-${audio_index[english[count]]}.wav`
 		// );
-		audio.playbackRate = speed;
 		audio.play();
 	}
 }
@@ -508,7 +496,7 @@ function to_easy() {
 			}
 		} else {
 			df1.push(english[count]);
-			console.log(`"${data[english[count]][0]}" was too easy.`);
+			console.log(`"${english[count]}" was too easy.`);
 			if (flip_on == 'off') {
 				show_flash();
 			} else {
@@ -533,7 +521,7 @@ function to_hard() {
 		}
 	} else {
 		df3.push(english[count]);
-		console.log(`"${data[english[count]][0]}" was too difficult.`);
+		console.log(`"${english[count]}" was too difficult.`);
 		if (flip_on == 'off') {
 			show_flash();
 		} else {

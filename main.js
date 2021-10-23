@@ -166,15 +166,15 @@ function createWindow() {
 
 	// Global key shortcuts
 	// a. Audio play
-	electronLocalshortcut.register('W', () => {
+	electronLocalshortcut.register('C', () => {
 		win.webContents.send('short-audio');
 	});
 	// b. Flash card
-	electronLocalshortcut.register('C', () => {
+	electronLocalshortcut.register('2', () => {
 		win.webContents.send('short-flash');
 	});
 	// c. Easy
-	electronLocalshortcut.register('Q', () => {
+	electronLocalshortcut.register('1', () => {
 		win.webContents.send('short-easy');
 	});
 	// d. Reset
