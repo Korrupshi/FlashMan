@@ -1,10 +1,11 @@
 /* TODO: 
 	1. When clicking hard / audio / flip, something goes wrong at reset
+	2. Can scroll through easy cards
+	3. Another page/section with all the decks
+	4. Add python scripts update
 
 	Feature:
-		- Choose to only get pinyin, or produce audio: 
-			if 1 line, then full translate, if 2 lines, get pinyin + audio, if 3 lines get audio
-		- Revamp the CSS look
+		
 
 	BUG:
 */
@@ -280,7 +281,7 @@ function show_flash() {
 				// 	console.log('No img');
 				// }
 				audio.playbackRate = speed;
-				audio.play(); //TIP: audio off now
+				audio.play();
 			}
 		} else {
 			// Show back card: this is starting point
@@ -332,7 +333,7 @@ function show_flash() {
 
 				// TIP: Remove below to remove audio on MAIN start
 				else {
-					audio.play();
+					// audio.play();
 				}
 			}
 		}
@@ -553,10 +554,11 @@ function add_10() {
 	} else {
 		deck_size = temp.length;
 	}
-	console.log(deck_size);
+	// console.log(deck_size);
 	english = temp.slice(0, deck_size);
 	// console.log('10 cards added!');
 	num_flash.innerHTML = `(${count + 1}/${english.length})`;
+	reset();
 }
 
 btn_add.addEventListener('click', function () {

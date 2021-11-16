@@ -7,7 +7,7 @@ import pandas as pd
 import os, sys
 
 # os.system('cls')
-pinyin = Pinyin()
+pinyin = Pinyin() 
 
 # 1. Inputs
 # a. names
