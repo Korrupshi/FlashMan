@@ -8,6 +8,7 @@
 		
 
 	BUG:
+	1. After deleting Deck, the Set files remained. The Set files got remade using random numbers
 */
 
 // A. Import functions_________________
@@ -107,8 +108,16 @@ ipc.on('selected-file', function (event, path) {
 
 	console.log('File selected: ' + temp2);
 	filename = temp2;
-	reset();
-	load_data();
+	load_data();  // TIP: switch these two if shit breaks
+	// reset();
+	english = shuffle(english);
+	num_flash.innerHTML = `(0/${english.length})`;
+
+	front.innerHTML = '';
+	back.innerHTML = '';
+	pinyin.innerHTML = '';
+	count = -1;
+	cycle = 0;
 });
 
 // C. Load in data and global variables________________
@@ -300,9 +309,9 @@ function show_flash() {
 					// audio mode off
 					num_flash.innerHTML = `(${count + 1}/${english.length})`;
 					front.innerHTML = '';
-					back.innerHTML = ''; // TIP: Pinyin
-					pinyin.innerHTML = ''; // TIP: NO Pinyin
-					// pinyin.innerHTML = data[english[count]][1]; // Show pinyin
+					back.innerHTML = ''; 
+					pinyin.innerHTML = ''; 
+					// pinyin.innerHTML = data[english[count]][1]; // TIP: Show pinyin
 					back.innerHTML = data[english[count]][2];
 				}
 
@@ -332,9 +341,9 @@ function show_flash() {
 				}
 
 				// TIP: Remove below to remove audio on MAIN start
-				else {
-					// audio.play();
-				}
+				// else {
+				// 	audio.play();
+				// }
 			}
 		}
 	}
@@ -351,7 +360,7 @@ btn_show.addEventListener('click', function () {
 
 // 2. Reset function
 function reset() {
-	update_deck(); //!Turn this off if shit breaks
+	update_deck(); //TIP: !Turn this off if shit breaks
 	load_data();
 
 	english = shuffle(english);
@@ -567,18 +576,21 @@ btn_add.addEventListener('click', function () {
 
 // 9. Update
 function update_deck() {
-	// convert JSON object to a string
-	var json_df1 = JSON.stringify(df1);
+	if (df1 != null){
 
-	// Write L1 file
-	// Sync
-	try {
-		fs.writeFileSync(`./data/sets/${filename}_L1.json`, json_df1);
-		console.log('L1 updated!');
-	} catch {
-		let temp = [];
-		json_df1 = JSON.stringify(temp);
-		fs.writeFileSync(`./data/sets/${filename}_L1.json`, json_df1);
+		// convert JSON object to a string
+		var json_df1 = JSON.stringify(df1);
+	
+		// Write L1 file
+		// Sync
+		try {
+			fs.writeFileSync(`./data/sets/${filename}_L1.json`, json_df1);
+			console.log('L1 updated!');
+		} catch {
+			let temp = [];
+			json_df1 = JSON.stringify(temp);
+			fs.writeFileSync(`./data/sets/${filename}_L1.json`, json_df1);
+		}
 	}
 
 	// Async
@@ -590,18 +602,19 @@ function update_deck() {
 	// 	}
 	// });
 
-	let json_df3 = JSON.stringify(df3);
+	if (df3 != null){
+		let json_df3 = JSON.stringify(df3);
 
-	// Write L3 file
-	try {
-		fs.writeFileSync(`./data/sets/${filename}_L3.json`, json_df3);
-		console.log('L3 updated!');
-	} catch {
-		let temp = [];
-		json_df3 = JSON.stringify(temp);
-		fs.writeFileSync(`./data/sets/${filename}_L3.json`, json_df3);
+		// Write L3 file
+		try {
+			fs.writeFileSync(`./data/sets/${filename}_L3.json`, json_df3);
+			console.log('L3 updated!');
+		} catch {
+			let temp = [];
+			json_df3 = JSON.stringify(temp);
+			fs.writeFileSync(`./data/sets/${filename}_L3.json`, json_df3);
+		}
 	}
-
 	// fs.writeFile(`./data/${filename}_L3.json`, json_df3, 'utf8', (err) => {
 	// 	if (err) {
 	// 		console.log(`Error writing file: ${err}`);
@@ -716,6 +729,7 @@ deck_del.addEventListener('click', () => {
 ipc.on('selected-del-file', function (event, path) {
 	var temp1 = path.split('\\').slice(-1)[0]; //get filename
 	del_file = temp1.split('.')[0];
+	console.log(del_file);
 	del_deck();
 });
 
@@ -743,6 +757,8 @@ function del_deck() {
 				});
 			}
 		}
+		df1 = []
+		df3 = []
 	});
 	// c. Delete Audio
 	fs.readdir(dir_audio, (err, files) => {
