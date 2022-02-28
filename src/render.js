@@ -757,8 +757,8 @@ function del_deck() {
 				});
 			}
 		}
-		df1 = []
-		df3 = []
+		// df1 = []
+		// df3 = []
 	});
 	// c. Delete Audio
 	fs.readdir(dir_audio, (err, files) => {
